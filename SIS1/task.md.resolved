@@ -1,0 +1,12 @@
+# KTZ Cloud Transformation & AI Agent Roadmap
+
+- [ ] **Phase 1: Strategic Diagnosis (The "Cagan Audit")**
+    - [x] Research KTZ Annual Report / Strategy (Strategic Pillars, Digital Goals).
+    - [x] Create [system_prompt.md](file:///C:/Users/nursa/.gemini/antigravity/brain/a6323d6a-22af-42a7-8bfb-16df1bface0a/system_prompt.md) (The Prompt used for the audit).
+    - [x] Draft [transformation_memo.md](file:///C:/Users/nursa/.gemini/antigravity/brain/a6323d6a-22af-42a7-8bfb-16df1bface0a/transformation_memo.md) (Gap analysis vs Product Operating Model).
+- [ ] **Phase 2: Deep Discovery (The "JTBD Simulation")**
+    - [x] Identify specific internal problem (e.g., Procurement/Logistics).
+    - [x] Create [interview_log.md](file:///C:/Users/nursa/.gemini/antigravity/brain/a6323d6a-22af-42a7-8bfb-16df1bface0a/interview_log.md) (Simulated "5 Whys" interview with persona).
+    - [x] Create [prd.md](file:///C:/Users/nursa/.gemini/antigravity/brain/a6323d6a-22af-42a7-8bfb-16df1bface0a/prd.md) (Product Requirements Document).
+- [ ] **Phase 3: The Managerial Defense (Governance & Finance)**
+    - [x] Create [managerial_defense.md](file:///C:/Users/nursa/.gemini/antigravity/brain/a6323d6a-22af-42a7-8bfb-16df1bface0a/managerial_defense.md) (ROI Analysis & Governance/Ethics/Data Residency check).
