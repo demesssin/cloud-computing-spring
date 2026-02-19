@@ -1,0 +1,6 @@
+Write a Python function called parse_csv that:
+1. Accepts a file path as input.
+2. Parses a CSV file.
+3. Returns a list of dictionaries.
+4. Handles FileNotFoundError properly.
+5. Does not use eval() or exec().
