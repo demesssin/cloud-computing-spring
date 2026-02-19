@@ -66,4 +66,4 @@ except Exception as e:
 with open("compliance_report.json", "w", encoding="utf-8") as f:
     json.dump(parsed, f, indent=4)
 
-print("✅ Compliance report generated successfully!")
+print("Compliance report generated successfully!")
