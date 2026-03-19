@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CFO Bot — Cloud Cost Estimator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- API Key Overlay -->
+  <div id="api-key-overlay" class="overlay">
+    <div class="overlay-card">
+      <div class="overlay-logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">CFO<strong>Bot</strong></span>
+      </div>
+      <h2>Enter Your API Key</h2>
+      <p>CFO Bot uses the Google Gemini API (free tier) for AI-powered cost estimation. Your key is stored in session storage only and never leaves your browser.</p>
+      <form id="api-key-form">
+        <div class="input-group">
+          <input
+            type="password"
+            id="api-key-input"
+            placeholder="AIza..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button type="submit" class="btn-primary">Connect</button>
+        </div>
+        <span id="api-key-error" class="error-text"></span>
+      </form>
+      <p class="hint">Get your free key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></p>
+    </div>
+  </div>
+
+  <!-- App Shell -->
+  <div class="app-shell">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">CFO<strong>Bot</strong></span>
+        <span class="badge">Cloud Cost Estimator</span>
+      </div>
+      <nav class="header-actions">
+        <button id="reset-btn" class="btn-ghost" title="New session">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Reset
+        </button>
+        <button id="export-btn" class="btn-ghost" title="Export estimate as JSON">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="app-main">
+
+      <!-- Sidebar: Cost Summary -->
+      <aside class="cost-sidebar">
+        <div class="sidebar-header">
+          <h3>Cost Summary</h3>
+          <span class="sidebar-sub">Monthly estimate</span>
+        </div>
+
+        <div id="cost-components" class="cost-list">
+          <p class="empty-state">No estimates yet.<br>Start chatting to add components.</p>
+        </div>
+
+        <div class="sidebar-total">
+          <span class="total-label">Total / month</span>
+          <span id="total-cost" class="total-amount">$0.00</span>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="annual-row">
+            <span>Annual projection</span>
+            <span id="annual-cost">$0.00</span>
+          </div>
+          <div class="disclaimer">
+            Estimates based on published Q2 2025 rates. Actual costs may vary.
+          </div>
+        </div>
+
+        <!-- Pricing Reference Mini-Table -->
+        <details class="price-ref">
+          <summary>Quick pricing reference</summary>
+          <table class="ref-table">
+            <tr><th colspan="2">Compute / month</th></tr>
+            <tr><td>Micro (0.25vCPU)</td><td>$5.00</td></tr>
+            <tr><td>Small (1vCPU)</td><td>$18.00</td></tr>
+            <tr><td>Medium (2vCPU)</td><td>$35.00</td></tr>
+            <tr><td>Large (4vCPU)</td><td>$90.00</td></tr>
+            <tr><td>XLarge (8vCPU)</td><td>$175.00</td></tr>
+            <tr><th colspan="2">Storage</th></tr>
+            <tr><td>GB/month</td><td>$0.02</td></tr>
+            <tr><td>Egress 0-1TB</td><td>$0.08/GB</td></tr>
+            <tr><th colspan="2">LLM (per 1M tokens)</th></tr>
+            <tr><td>GPT-4o in/out</td><td>$2/$15</td></tr>
+            <tr><td>Claude Haiku in/out</td><td>$0.25/$0.80</td></tr>
+            <tr><td>Gemini Flash in/out</td><td>$0.20/$1.00</td></tr>
+          </table>
+        </details>
+      </aside>
+
+      <!-- Chat Area -->
+      <section class="chat-section">
+
+        <!-- Messages -->
+        <div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-label="Chat messages">
+
+          <!-- Typing indicator (hidden by default) -->
+          <div id="typing-indicator" class="typing-indicator" style="display:none">
+            <div class="bubble">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Quick Chips -->
+        <div id="quick-chips" class="quick-chips" aria-label="Quick action buttons"></div>
+
+        <!-- Input Bar -->
+        <div class="input-bar">
+          <textarea
+            id="user-input"
+            class="chat-input"
+            placeholder="Describe your infrastructure... e.g. '3 medium servers, 500GB storage, PostgreSQL Standard'"
+            rows="1"
+            aria-label="Type your message"
+          ></textarea>
+          <button id="send-btn" class="send-btn" aria-label="Send message">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/pricingEngine.js"></script>
+  <script src="js/intentParser.js"></script>
+  <script src="js/chatEngine.js"></script>
+  <script src="js/uiController.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- Auto-resize textarea -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const ta = document.getElementById('user-input');
+      if (ta) {
+        ta.addEventListener('input', () => {
+          ta.style.height = 'auto';
+          ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+        });
+      }
+
+      // Update annual projection whenever total changes
+      const observer = new MutationObserver(() => {
+        const total = document.getElementById('total-cost');
+        const annual = document.getElementById('annual-cost');
+        if (total && annual) {
+          const monthly = parseFloat(total.textContent.replace('$', '').replace(',', '')) || 0;
+          annual.textContent = '$' + (monthly * 12).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+      });
+      const totalEl = document.getElementById('total-cost');
+      if (totalEl) observer.observe(totalEl, { childList: true, characterData: true, subtree: true });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+[debug] [2026-03-19T06:10:34.662Z] ----------------------------------------------------------------------
+[debug] [2026-03-19T06:10:34.664Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\nursa\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only hosting
+[debug] [2026-03-19T06:10:34.665Z] CLI Version:   15.11.0
+[debug] [2026-03-19T06:10:34.665Z] Platform:      win32
+[debug] [2026-03-19T06:10:34.665Z] Node Version:  v24.14.0
+[debug] [2026-03-19T06:10:34.665Z] Time:          Thu Mar 19 2026 11:10:34 GMT+0500 (Казахстан)
+[debug] [2026-03-19T06:10:34.665Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-19T06:10:35.713Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-19T06:10:35.713Z] > authorizing via signed-in user (nurhat.006@mail.ru)
+[debug] [2026-03-19T06:10:35.713Z] [iam] checking project cfo-bot-cloud-estimator for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-03-19T06:10:35.716Z] Checked if tokens are valid: true, expires at: 1773904175225
+[debug] [2026-03-19T06:10:35.716Z] Checked if tokens are valid: true, expires at: 1773904175225
+[debug] [2026-03-19T06:10:35.717Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions [none]
+[debug] [2026-03-19T06:10:35.717Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions  x-goog-user-project=cfo-bot-cloud-estimator
+[debug] [2026-03-19T06:10:35.717Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-03-19T06:10:36.413Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions 400
+[debug] [2026-03-19T06:10:36.413Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions {"error":{"code":400,"message":"Project 'projects/cfo-bot-cloud-estimator' not found or deleted.","status":"INVALID_ARGUMENT","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"USER_PROJECT_DENIED","domain":"googleapis.com","metadata":{"service":"cloudresourcemanager.googleapis.com","containerInfo":"projects/cfo-bot-cloud-estimator","consumer":"projects/cfo-bot-cloud-estimator"}}]}}
+[debug] [2026-03-19T06:10:36.414Z] [iam] error while checking permissions, command may fail: Request to https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions had HTTP Error: 400, Project 'projects/cfo-bot-cloud-estimator' not found or deleted.
+[debug] [2026-03-19T06:10:36.415Z] Checked if tokens are valid: true, expires at: 1773904175225
+[debug] [2026-03-19T06:10:36.415Z] Checked if tokens are valid: true, expires at: 1773904175225
+[debug] [2026-03-19T06:10:36.415Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/cfo-bot-cloud-estimator [none]
+[debug] [2026-03-19T06:10:37.208Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/cfo-bot-cloud-estimator 403
+[debug] [2026-03-19T06:10:37.208Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/cfo-bot-cloud-estimator {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2026-03-19T06:10:37.208Z] Request to https://firebase.googleapis.com/v1beta1/projects/cfo-bot-cloud-estimator had HTTP Error: 403, The caller does not have permission
+[debug] [2026-03-19T06:10:37.449Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/cfo-bot-cloud-estimator had HTTP Error: 403, The caller does not have permission
+    at responseToError (C:\Users\nursa\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:53:12)
+    at RetryOperation._fn (C:\Users\nursa\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:333:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[error] 
+[error] Error: Failed to get Firebase project cfo-bot-cloud-estimator. Please make sure the project exists and your account has permission to access it.
+[debug] [2026-03-19T06:10:54.120Z] ----------------------------------------------------------------------
+[debug] [2026-03-19T06:10:54.122Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\nursa\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only hosting
+[debug] [2026-03-19T06:10:54.123Z] CLI Version:   15.11.0
+[debug] [2026-03-19T06:10:54.123Z] Platform:      win32
+[debug] [2026-03-19T06:10:54.123Z] Node Version:  v24.14.0
+[debug] [2026-03-19T06:10:54.123Z] Time:          Thu Mar 19 2026 11:10:54 GMT+0500 (Казахстан)
+[debug] [2026-03-19T06:10:54.123Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-19T06:10:55.089Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-19T06:10:55.089Z] > authorizing via signed-in user (nurhat.006@mail.ru)
+[debug] [2026-03-19T06:10:55.089Z] [iam] checking project cfo-bot-cloud-estimator for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-03-19T06:10:55.090Z] Checked if tokens are valid: true, expires at: 1773904175225
+[debug] [2026-03-19T06:10:55.090Z] Checked if tokens are valid: true, expires at: 1773904175225
+[debug] [2026-03-19T06:10:55.091Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions [none]
+[debug] [2026-03-19T06:10:55.091Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions  x-goog-user-project=cfo-bot-cloud-estimator
+[debug] [2026-03-19T06:10:55.091Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-03-19T06:10:55.622Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions 400
+[debug] [2026-03-19T06:10:55.623Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions {"error":{"code":400,"message":"Project 'projects/cfo-bot-cloud-estimator' not found or deleted.","status":"INVALID_ARGUMENT","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"USER_PROJECT_DENIED","domain":"googleapis.com","metadata":{"service":"cloudresourcemanager.googleapis.com","containerInfo":"projects/cfo-bot-cloud-estimator","consumer":"projects/cfo-bot-cloud-estimator"}}]}}
+[debug] [2026-03-19T06:10:55.623Z] [iam] error while checking permissions, command may fail: Request to https://cloudresourcemanager.googleapis.com/v1/projects/cfo-bot-cloud-estimator:testIamPermissions had HTTP Error: 400, Project 'projects/cfo-bot-cloud-estimator' not found or deleted.
+[debug] [2026-03-19T06:10:55.624Z] Checked if tokens are valid: true, expires at: 1773904175225
+[debug] [2026-03-19T06:10:55.624Z] Checked if tokens are valid: true, expires at: 1773904175225
+[debug] [2026-03-19T06:10:55.624Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/cfo-bot-cloud-estimator [none]
+[debug] [2026-03-19T06:10:56.107Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/cfo-bot-cloud-estimator 403
+[debug] [2026-03-19T06:10:56.107Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/cfo-bot-cloud-estimator {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2026-03-19T06:10:56.107Z] Request to https://firebase.googleapis.com/v1beta1/projects/cfo-bot-cloud-estimator had HTTP Error: 403, The caller does not have permission
+[debug] [2026-03-19T06:10:56.345Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/cfo-bot-cloud-estimator had HTTP Error: 403, The caller does not have permission
+    at responseToError (C:\Users\nursa\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:53:12)
+    at RetryOperation._fn (C:\Users\nursa\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:333:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[error] 
+[error] Error: Failed to get Firebase project cfo-bot-cloud-estimator. Please make sure the project exists and your account has permission to access it.
