@@ -1,6 +1,7 @@
 /**
  * chatEngine.js — CFO Bot (Gemini API version)
- * Uses Google Gemini 1.5 Flash (free tier via AI Studio)
+ * Uses Google Gemini 2.0 Flash (free tier via AI Studio)
+ * Auto-retry on rate limit (429)
  */
 
 const SYSTEM_PROMPT = `You are CFO Bot, a precise cloud infrastructure cost estimation assistant.
@@ -87,10 +88,29 @@ function extractAndStoreCost(text, label) {
   }
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function showRetryCountdown(seconds) {
+  const bubble = document.querySelector('#typing-indicator .bubble');
+  if (!bubble) return;
+  let remaining = seconds;
+  bubble.innerHTML = `<span style="font-size:13px;color:var(--text-secondary)">Подождите ${remaining}с, повтор автоматически...</span>`;
+  const iv = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(iv);
+      bubble.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    } else {
+      bubble.innerHTML = `<span style="font-size:13px;color:var(--text-secondary)">Подождите ${remaining}с, повтор автоматически...</span>`;
+    }
+  }, 1000);
+}
+
 async function sendMessage(userMessage, apiKey) {
   addMessage('user', userMessage);
 
-  // Build contents for Gemini (roles: "user" and "model")
   const contents = state.messages.map(m => ({
     role: m.role === 'assistant' ? 'model' : 'user',
     parts: [{ text: m.content }],
@@ -98,39 +118,53 @@ async function sendMessage(userMessage, apiKey) {
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: contents,
-      generationConfig: { temperature: 0.1, maxOutputTokens: 1024 },
-    }),
-  });
+  const RETRY_DELAYS = [10, 20, 40, 60];
 
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
+  for (let attempt = 0; attempt <= RETRY_DELAYS.length; attempt++) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: contents,
+        generationConfig: { temperature: 0.1, maxOutputTokens: 1024 },
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const botText = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n')
+        || 'Sorry, I could not generate a response.';
+
+      addMessage('assistant', botText);
+
+      const intentResult = typeof parseIntent !== 'undefined' ? parseIntent(userMessage) : { intent: 'GENERAL' };
+      const labels = {
+        ESTIMATE_COMPUTE: '🖥️ Compute', ESTIMATE_STORAGE: '📦 Storage',
+        ESTIMATE_DATABASE: '🗄️ Database', ESTIMATE_LLM: '🤖 LLM API',
+        ESTIMATE_SERVERLESS: '⚡ Serverless', ESTIMATE_BANDWIDTH: '🌐 Bandwidth',
+      };
+      if (labels[intentResult.intent]) extractAndStoreCost(botText, labels[intentResult.intent]);
+
+      return botText;
+    }
+
     const code = response.status;
+    const err = await response.json().catch(() => ({}));
+
     if (code === 403) throw new Error('Invalid API key. Get a free key at aistudio.google.com');
-    if (code === 429) throw new Error('Rate limit reached. Wait a moment and try again.');
+
+    if (code === 429 && attempt < RETRY_DELAYS.length) {
+      const waitSec = RETRY_DELAYS[attempt];
+      showRetryCountdown(waitSec);
+      await sleep(waitSec * 1000);
+      continue;
+    }
+
     throw new Error(`Gemini API error ${code}: ${err.error?.message || 'Unknown error'}`);
   }
 
-  const data = await response.json();
-  const botText = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n')
-    || 'Sorry, I could not generate a response.';
-
-  addMessage('assistant', botText);
-
-  const intentResult = typeof parseIntent !== 'undefined' ? parseIntent(userMessage) : { intent: 'GENERAL' };
-  const labels = {
-    ESTIMATE_COMPUTE: '🖥️ Compute', ESTIMATE_STORAGE: '📦 Storage',
-    ESTIMATE_DATABASE: '🗄️ Database', ESTIMATE_LLM: '🤖 LLM API',
-    ESTIMATE_SERVERLESS: '⚡ Serverless', ESTIMATE_BANDWIDTH: '🌐 Bandwidth',
-  };
-  if (labels[intentResult.intent]) extractAndStoreCost(botText, labels[intentResult.intent]);
-
-  return botText;
+  throw new Error('Gemini перегружен. Попробуй ещё раз через минуту.');
 }
 
 function getState() { return { ...state }; }
