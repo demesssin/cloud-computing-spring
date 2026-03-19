@@ -116,9 +116,9 @@ async function sendMessage(userMessage, apiKey) {
     parts: [{ text: m.content }],
   }));
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
-  const RETRY_DELAYS = [10, 20, 40, 60];
+  const RETRY_DELAYS = [15, 30, 60, 90];
 
   for (let attempt = 0; attempt <= RETRY_DELAYS.length; attempt++) {
     const response = await fetch(url, {
